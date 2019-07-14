@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, ScrollView, KeyboardAvoidingView, StyleSheet, Text, Dimensions } from 'react-native';
 import { ThemeProvider, ListItem } from 'react-native-elements';
+import { AuthSession } from 'expo';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 /*const list = [
     {
@@ -69,7 +71,10 @@ export class MessagesLog extends React.Component {
         this.state = {
             list: [{name: 'Lucy',
             msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            self: false}]
+            self: false},
+            {name: 'Lucy',
+            msg: 'Yeah',
+            self: true}]
         };
     }
 
@@ -87,48 +92,60 @@ export class MessagesLog extends React.Component {
 
     render () {
         return (
-            
-                <View style={styles.container}>
-                <ScrollView 
-                contentContainerStyle={styles.scrollContainer}
-                // Next two lines make the scroll view always scroll to the end
-                ref={ref => this.ScrollView = ref}
-                onContentSizeChange={(contentWidth, contentHeight)=>{
-                    this.ScrollView.scrollToEnd({animated:true});
-                }}>
-                    {
-                        this.state.list.map((l,i) => (
-                            <ListItem
-                                key={i}
-                                name={l.name}
-                                title={l.msg}
-                                titleStyle={{color : 'white'}}
-                                containerStyle={[styles.Message, l.self == true ? styles.selfMsg : styles.regMsg]}
-                            />
-                        ))
-                    }
-                    </ScrollView>
-                </View>
-            
+            <View style={styles.container}>
+            <ScrollView 
+            contentContainerStyle={styles.scrollContainer}
+            // Next two lines make the scroll view always scroll to the end
+            ref={ref => this.ScrollView = ref}
+            onContentSizeChange={(contentWidth, contentHeight)=>{
+                this.ScrollView.scrollToEnd({animated:true});
+            }}>
+                {
+                    this.state.list.map((l,i) => (
+                        <ListItem
+                            key={i}
+                            name={l.name}
+                            title={l.msg}
+                            titleStyle={styles.messageText}
+                            style={styles.messageContainer}
+                            contentContainerStyle={styles.msgContentContainer}
+                            containerStyle={[styles.messageBubble, l.self == true ? styles.selfMsg : styles.regMsg]}
+                        />
+                    ))
+                }
+            </ScrollView>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    scrollContainer: {
-        backgroundColor: '#000000',
-        justifyContent: 'flex-end',
-    },
     container: {
-        flex: 1,
-        //backgroundColor: '#000000',
-        justifyContent: 'flex-end',
+        maxHeight: SCREEN_HEIGHT-100,
+        //height: SCREEN_HEIGHT,
+        //width: SCREEN_WIDTH,
+        //backgroundColor: 'red',
     },
-    Message: {
+    scrollContainer: {
+    },
+    messageContainer: {
+        //backgroundColor: 'green',
+    },
+    msgContentContainer: {
+        flex: 0,
+    },
+    messageBubble: {
+        paddingVertical: 7,
+        paddingHorizontal: 10,
         marginHorizontal: 16,
-        marginVertical: 8,
-        borderRadius: 8,
+        marginVertical: 2,
+        borderRadius: 16,
         maxWidth: '70%',
+    },
+    messageText: {
+        color : 'white',
+        //backgroundColor: 'blue',
+        alignSelf: 'center',
     },
     selfMsg: {
         backgroundColor: '#5691BB',
@@ -136,5 +153,6 @@ const styles = StyleSheet.create({
     },
     regMsg: {
         backgroundColor: '#575757',
+        alignSelf: 'flex-start'
     }
 })

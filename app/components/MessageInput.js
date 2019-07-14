@@ -88,7 +88,7 @@ export class MessageInput extends React.Component {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#000000',
-        height: 55,
+        height: 75,
         flexDirection: 'row',
     },
     textinput_focused: {

@@ -1,8 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Platform, View, KeyboardAvoidingView, StatusBar, Dimensions } from 'react-native';
 
 import { MessageInput } from '../components/MessageInput.js'
 import { MessagesLog } from '../components/MessagesLog'
+
+const MyStatusBar = ({backgroundColor, ...props}) => (
+    <View style={[styles.statusBar, { backgroundColor }]}>
+      <StatusBar translucent hidden="false" backgroundColor={backgroundColor} {...props} />
+    </View>
+  );
+
+  const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export class Home extends React.Component {
     constructor(props) {
@@ -22,21 +30,57 @@ export class Home extends React.Component {
     }
 
     render () {
+        const statusbar = (Platform.OS == 'ios') ? <View style={styles.statusbar}></View> : <View></View>;
+
         return (
-            <KeyboardAvoidingView style = {styles.container} behavior="padding" enabled>
-                <MessagesLog ref={this.msgLogRef}></MessagesLog>
+            <View style={styles.container}>
+
+            {/* {statusbar} */}
+
+            <MyStatusBar backgroundColor="#000000" barStyle="light-content" />
+
+            <KeyboardAvoidingView
+                style = {styles.keyViewContainer}
+                behavior="height"
+                keyboardVerticalOffset='-20'
+                enabled>
+                
+                <MessagesLog 
+                    ref={this.msgLogRef}
+                    style={styles.msgLog}
+                    ></MessagesLog>
                 <MessageInput
                     addNewMessage={ this.addNewMessage }
                 />
             </KeyboardAvoidingView>
+            </View>
         );
     }
 }
 
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 50 : StatusBar.currentHeight;
+
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#000000',
+        flex: 1,
+        backgroundColor: 'black',
+        //height: SCREEN_HEIGHT,
+    },
+    keyViewContainer: {
+        backgroundColor: 'black',
         flex: 1,
         justifyContent: 'flex-end',
+        flexDirection: 'column',
+        paddingTop: STATUSBAR_HEIGHT+20,
     },
+    msgLog: {
+        flex: 1,
+    },
+    /*statusbar: {
+        backgroundColor: '#000000',
+        height: 50,
+    },*/
+    statusBar: {
+        height: STATUSBAR_HEIGHT,
+      },
 });
