@@ -1,68 +1,9 @@
 import React from 'react';
-import { View, ScrollView, KeyboardAvoidingView, StyleSheet, Text, Dimensions } from 'react-native';
-import { ThemeProvider, ListItem } from 'react-native-elements';
-import { AuthSession } from 'expo';
+import { View, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { ListItem } from 'react-native-elements';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
-
-/*const list = [
-    {
-      name: 'Amy Farha',
-      msg: 'Lorem ipsum dolor sit amet',
-      self: false
-    },
-    {
-      name: 'Chris',
-      msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      self: false
-    },
-    {
-        name: 'John',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: true
-    },
-    {
-        name: 'Sherman',
-        msg: 'Excepteur sint occaecat cupidatat non proident.',
-        self: false
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: false
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: false
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: false
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: true
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: false
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: false
-    },
-    {
-        name: 'Lucy',
-        msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        self: false
-    },
-];*/
 
 export class MessagesLog extends React.Component {
     constructor(props) {
