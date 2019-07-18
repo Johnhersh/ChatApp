@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, Platform, View, KeyboardAvoidingView, StatusBar, Dimensions } from 'react-native';
 
-import { MessageInput } from '../components/MessageInput.js'
-import { MessagesLog } from '../components/MessagesLog'
+import { MessageInput } from '../components/MessageInput.js';
+import { MessagesLog } from '../components/MessagesLog';
+import * as signalR from '@aspnet/signalr';
 
 const MyStatusBar = ({backgroundColor, ...props}) => (
     <View style={[styles.statusBar, { backgroundColor }]}>
@@ -17,7 +18,7 @@ export class Home extends React.Component {
         super(props);
 
         this.state = {
-            //currentNewMessage: 'Def',
+            connection: null,
         }
 
         this.addNewMessage = this.addNewMessage.bind(this);
@@ -29,13 +30,27 @@ export class Home extends React.Component {
         this.msgLogRef.current.addNewMessage(message);
     }
 
-    render () {
-        const statusbar = (Platform.OS == 'ios') ? <View style={styles.statusbar}></View> : <View></View>;
+    componentDidMount = () => {
+            const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://192.168.1.155:5000/chatHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
 
+        this.setState({ connection }, () => {
+            this.state.connection
+              .start()
+              .then(() => console.log('Connection started!'))
+              .catch(err => console.log('Error while establishing connection :('));
+      
+            this.state.connection.on('ReceiveMessage', (user, receivedMessage, time, bIsSelf) => {
+              this.addNewMessage(receivedMessage);
+            });
+        });
+    }
+
+    render () {
         return (
             <View style={styles.container}>
-
-            {/* {statusbar} */}
 
             <MyStatusBar backgroundColor="#000000" barStyle="light-content" />
 
