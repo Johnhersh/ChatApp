@@ -10,20 +10,15 @@ export class MessagesLog extends React.Component {
         super(props);
 
         this.state = {
-            list: [{name: 'Lucy',
-            msg: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            self: false},
-            {name: 'Lucy',
-            msg: 'Yeah',
-            self: true}]
+            list: []
         };
     }
 
-    addNewMessage(message) {
-        console.log("2. Submitted message: "+message);
+    addNewMessage(user, msg, time, bIsSelf) {
+        //console.log("2. Submitted message: "+message);
         
         //Adding the new message to the array first
-        this.state.list.push({name: 'me', msg: message, self: true});
+        this.state.list.push({name: user, msg: msg, time: time, self: bIsSelf});
 
         //Need to save the state to cause the view to refresh
         this.setState({
@@ -45,9 +40,10 @@ export class MessagesLog extends React.Component {
                     this.state.list.map((l,i) => (
                         <ListItem
                             key={i}
-                            name={l.name}
-                            title={l.msg}
-                            titleStyle={styles.messageText}
+                            title={l.name}
+                            titleStyle={styles.name}
+                            subtitle={l.msg}
+                            subtitleStyle={styles.messageText}
                             style={styles.messageContainer}
                             contentContainerStyle={styles.msgContentContainer}
                             containerStyle={[styles.messageBubble, l.self == true ? styles.selfMsg : styles.regMsg]}
@@ -87,13 +83,18 @@ const styles = StyleSheet.create({
         color : 'white',
         //backgroundColor: 'blue',
         alignSelf: 'center',
+        fontSize: 16,
     },
     selfMsg: {
         backgroundColor: '#5691BB',
         alignSelf: 'flex-end'
     },
     regMsg: {
-        backgroundColor: '#575757',
+        backgroundColor: '#303030',
         alignSelf: 'flex-start'
+    },
+    name: {
+        color: '#007053',
+        fontSize: 12,
     }
 })

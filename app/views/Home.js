@@ -27,7 +27,12 @@ export class Home extends React.Component {
 
     addNewMessage(message) {
         //console.log("Submitted message: "+message);
-        this.msgLogRef.current.addNewMessage(message);
+        //this.msgLogRef.current.addNewMessage(message);
+        this.state.connection.invoke("SendMessage", message, "J-phone").catch(err => console.error(err.toString()));
+    }
+
+    messageReceived(user, msg, time, bIsSelf) {
+        this.msgLogRef.current.addNewMessage(user, msg, time, bIsSelf); // Happens on the MessagesLog component
     }
 
     componentDidMount = () => {
@@ -43,7 +48,7 @@ export class Home extends React.Component {
               .catch(err => console.log('Error while establishing connection :('));
       
             this.state.connection.on('ReceiveMessage', (user, receivedMessage, time, bIsSelf) => {
-              this.addNewMessage(receivedMessage);
+              this.messageReceived(user, receivedMessage, time, bIsSelf);
             });
         });
     }
