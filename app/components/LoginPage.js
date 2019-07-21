@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, Dimensions, KeyboardAvoidingView, Animated } from 'react-native';
 import { Input, Button, Icon, ThemeProvider, Text } from 'react-native-elements';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -38,24 +38,14 @@ export class LoginPage extends React.Component {
         this.state = {
             username: '',
             password: '',
+            fadeValue: new Animated.Value(1),
+            hidden: false,
         }
 
         this.login = this.login.bind(this);
     }
 
     async login() {
-        /*fetch('https://mywebsite.com/endpoint/', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: 'yourValue',
-                secondParam: 'yourOtherValue',
-            }),
-        });*/
-
         try {
             let response = await fetch(
             'http://192.168.1.155:5000/api/MobileLogin', {
@@ -76,18 +66,19 @@ export class LoginPage extends React.Component {
         } catch (error) {
             console.error(error);
         }
-
-        //console.log("User: "+this.state.username);
-        //console.log("Pass: "+this.state.password);
     }
 
     finishLogin(response) {
         /*for (var pair of response.headers.entries()) {
             console.log(pair[0]+ ': '+ pair[1]);
         }*/
-        if (JSON.parse(response).LoginSuccess)
+        if (JSON.parse(response).LoginSuccess) {
             console.log("Login Success");
-        else
+            Animated.timing(this.state.fadeValue, {
+                toValue: 0,
+                duration: 1500,
+            }).start(() => {this.setState({hidden: true});});
+        } else
             console.log("Login Fail");
     }
 
@@ -97,8 +88,13 @@ export class LoginPage extends React.Component {
             username,
         } = this.state;
 
+        if (this.state.hidden) return null;
+
         return (
-            <View style={styles.container}>
+            <Animated.View 
+                style={[styles.container, {opacity: this.state.fadeValue}]}
+                ref={ref => this.AnimView = ref}
+                >
                 <KeyboardAvoidingView
                     style={styles.userInfo}
                     behavior="height"
@@ -142,7 +138,7 @@ export class LoginPage extends React.Component {
                         />
                     </ThemeProvider>
                 </KeyboardAvoidingView>
-            </View>
+            </Animated.View>
         );
     }
 }
@@ -175,6 +171,7 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH,
         alignItems: 'center',
         justifyContent: 'center',
+        zIndex: 1,
     },
     userInfo: {
         flex: 1,
