@@ -19,6 +19,8 @@ export class Home extends React.Component {
 
         this.state = {
             connection: null,
+            //props.user gets set from the Mainapp component in App.js
+            activeUser: props.user,
         }
 
         this.addNewMessage = this.addNewMessage.bind(this);
@@ -26,13 +28,17 @@ export class Home extends React.Component {
     }
 
     addNewMessage(message) {
-        //console.log("Submitted message: "+message);
-        //this.msgLogRef.current.addNewMessage(message);
-        this.state.connection.invoke("SendMessage", message, "J-phone").catch(err => console.error(err.toString()));
+        this.state.connection.invoke("SendMessage", message, this.state.activeUser).catch(err => console.error(err.toString()));
+        //console.log("Sending from user: "+this.state.activeUser);
     }
 
     messageReceived(user, msg, time, bIsSelf) {
         this.msgLogRef.current.addNewMessage(user, msg, time, bIsSelf); // Happens on the MessagesLog component
+    }
+
+    //We need to make sure the activeUser is up to date
+    componentWillUpdate(nextProps, nextState) {
+        nextState.activeUser = nextProps.user;
     }
 
     componentDidMount = () => {

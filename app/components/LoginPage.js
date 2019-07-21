@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, KeyboardAvoidingView, Animated } from 'react-native';
+import { StyleSheet, View, Dimensions, KeyboardAvoidingView, Animated, Easing } from 'react-native';
 import { Input, Button, Icon, ThemeProvider, Text } from 'react-native-elements';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -77,7 +77,11 @@ export class LoginPage extends React.Component {
             Animated.timing(this.state.fadeValue, {
                 toValue: 0,
                 duration: 1500,
-            }).start(() => {this.setState({hidden: true});});
+                easing: Easing.ease,
+            }).start(() => {
+                    this.setState({hidden: true});
+                    this.props.setNewUser(this.state.username);
+                });
         } else
             console.log("Login Fail");
     }

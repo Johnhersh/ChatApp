@@ -31,9 +31,13 @@ export class MessageInput extends React.Component {
     }
 
     onSend() {
-        console.log(this.state.currentMessage);
+        //console.log(this.state.currentMessage);
         this.inputRef.current.clear();
-        this.props.addNewMessage(this.state.currentMessage); // Gets called on the Home component
+        if (this.state.currentMessage != "")
+            this.props.addNewMessage(this.state.currentMessage); // Gets called on the Home component
+        this.setState({
+            currentMessage: "",
+        });
     }
 
     render() {
