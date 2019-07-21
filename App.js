@@ -18,20 +18,26 @@ export class MainApp extends React.Component {
     this.state={
       username: ""
     };
+
+    this.homeRef = React.createRef(); // Holds a reference for the Home component so we can invoke a websocket connection after login is done
   }
 
-  updateUserName(newUser) {
+  loggedIn(newUser) {
     console.log("Setting new username to: "+newUser);
     this.setState({
       username: newUser
     });
+    this.homeRef.current.connectToServer();
   }
 
   render () {
     return (
       <View style={styles.container}>
-        <Home user={this.state.username}/>
-        <LoginPage setNewUser={ this.updateUserName.bind(this) }></LoginPage>
+        <Home 
+          user={this.state.username}
+          ref={this.homeRef}
+          />
+        <LoginPage setNewUser={ this.loggedIn.bind(this) }></LoginPage>
       </View>
     )
   }

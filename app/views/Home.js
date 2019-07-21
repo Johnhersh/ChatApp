@@ -41,8 +41,9 @@ export class Home extends React.Component {
         nextState.activeUser = nextProps.user;
     }
 
-    componentDidMount = () => {
-            const connection = new signalR.HubConnectionBuilder()
+    //This function is called from the App after a successful login. At this point the username should be set correctly
+    connectToServer(){
+        const connection = new signalR.HubConnectionBuilder()
             .withUrl("http://192.168.1.155:5000/chatHub")
             .configureLogging(signalR.LogLevel.Information)
             .build();
