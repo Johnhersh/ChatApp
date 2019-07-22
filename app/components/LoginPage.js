@@ -74,16 +74,20 @@ export class LoginPage extends React.Component {
         }*/
         if (JSON.parse(response).LoginSuccess) {
             console.log("Login Success");
-            Animated.timing(this.state.fadeValue, {
-                toValue: 0,
-                duration: 1500,
-                easing: Easing.ease,
-            }).start(() => {
-                    this.setState({hidden: true});
-                    this.props.setNewUser(this.state.username);
-                });
+            this.props.setNewUser(this.state.username); // This will set in motion getting the old messages in the message log
         } else
             console.log("Login Fail");
+    }
+
+    // This gets called from the component in App.js after we're done loading all messages and are ready to hide the login screen
+    hideSelf() {
+        Animated.timing(this.state.fadeValue, {
+            toValue: 0,
+            duration: 700,
+            easing: Easing.ease,
+        }).start(() => {
+            this.setState({hidden: true});
+        });
     }
 
     render () {

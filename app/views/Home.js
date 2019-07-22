@@ -51,7 +51,12 @@ export class Home extends React.Component {
         this.setState({ connection }, () => {
             this.state.connection
               .start()
-              .then(() => console.log('Connection started!'))
+              .then(() => {
+                  console.log('Connection started!');
+                  this.state.connection.invoke("GetOldMessagesMobile", this.state.activeUser).then(()=> {
+                      this.props.doneLoading();
+                  });
+                })
               .catch(err => console.log('Error while establishing connection :('));
       
             this.state.connection.on('ReceiveMessage', (user, receivedMessage, time, bIsSelf) => {
