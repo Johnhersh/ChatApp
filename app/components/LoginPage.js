@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions, KeyboardAvoidingView, Animated, Easing } from 'react-native';
 import { Input, Button, Icon, ThemeProvider, Text } from 'react-native-elements';
+import LottieView from 'lottie-react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -40,12 +41,27 @@ export class LoginPage extends React.Component {
             password: '',
             fadeValue: new Animated.Value(1),
             hidden: false,
+            loadAnimProgress: new Animated.Value(0),
+            //loaderSource: '../../assets/1802-single-wave-loader.json'
         }
 
         this.login = this.login.bind(this);
     }
 
     async login() {
+        
+        //Start animating the loading bubbles
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(this.state.loadAnimProgress, {
+                    toValue: 1,
+                    duration: 1000,
+                    easing: Easing.linear,
+                  }),
+                Animated.delay(500),
+            ])
+        ).start();
+        
         try {
             let response = await fetch(
             'http://192.168.1.155:5000/api/MobileLogin', {
@@ -77,6 +93,7 @@ export class LoginPage extends React.Component {
             this.props.setNewUser(this.state.username); // This will set in motion getting the old messages in the message log
         } else
             console.log("Login Fail");
+            this.state.loadAnimProgress.setValue(0);
     }
 
     // This gets called from the component in App.js after we're done loading all messages and are ready to hide the login screen
@@ -109,6 +126,7 @@ export class LoginPage extends React.Component {
                     keyboardVerticalOffset='-20'
                     enabled>
                     <ThemeProvider theme={theme}>
+                        <LottieView style={styles.lottie} source={require('../../assets/1802-single-wave-loader.json')} loop progress={this.state.loadAnimProgress}/>
                         <FormInput 
                             refInput={input => (this.usernameInput = input)}
                             icon="user"
@@ -209,4 +227,11 @@ const styles = StyleSheet.create({
         height: 45,
         marginVertical: 10,
       },
+      lottie: {
+          //flex: 1,
+          //backgroundColor: 'white',
+          height: 300,
+          width: 400,
+          marginBottom: -120,
+      }
 });
