@@ -41,6 +41,28 @@ export class Home extends React.Component {
         nextState.activeUser = nextProps.user;
     }
 
+    async GetOldMessages() {
+        console.log('Getting old messages!');
+
+        try {
+            let response = await fetch(
+            'http://192.168.1.155:5000/api/MobileLogin', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            let responseJson = await response.json();
+            this.msgLogRef.current.addOldMessages(responseJson);
+        } catch (error) {
+            console.error(error);
+        }
+
+        console.log('Got old messages!');
+        this.props.doneLoading();
+    }
+
     //This function is called from the App after a successful login. At this point the username should be set correctly
     connectToServer(){
         const connection = new signalR.HubConnectionBuilder()
@@ -53,9 +75,6 @@ export class Home extends React.Component {
               .start()
               .then(() => {
                   console.log('Connection started!');
-                  this.state.connection.invoke("GetOldMessagesMobile", this.state.activeUser).then(()=> {
-                      this.props.doneLoading();
-                  });
                 })
               .catch(err => console.log('Error while establishing connection :('));
       
@@ -80,6 +99,7 @@ export class Home extends React.Component {
                 <MessagesLog 
                     ref={this.msgLogRef}
                     style={styles.msgLog}
+                    user={ this.props.user }
                     ></MessagesLog>
                 <MessageInput
                     addNewMessage={ this.addNewMessage }

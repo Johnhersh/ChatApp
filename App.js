@@ -30,6 +30,7 @@ export class MainApp extends React.Component {
       username: newUser
     });
     this.homeRef.current.connectToServer();
+    this.homeRef.current.GetOldMessages();
   }
 
   //This gets called by the Home component after it's done loading all the messages and we're ready to remove the login screen

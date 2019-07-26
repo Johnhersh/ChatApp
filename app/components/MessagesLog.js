@@ -15,15 +15,30 @@ export class MessagesLog extends React.Component {
     }
 
     addNewMessage(user, msg, time, bIsSelf) {
-        //console.log("2. Submitted message: "+message);
-        
         //Adding the new message to the array first
         this.state.list.push({name: user, msg: msg, time: time, self: bIsSelf});
 
         //Need to save the state to cause the view to refresh
         this.setState({
             list: this.state.list
-        })
+        });
+    }
+
+    //This gets called only once after log-in is finished to populate the Messages Log with old messages
+    addOldMessages(messageList) {
+        for (let i in messageList) {
+            let bIsSelf = false;
+            if (messageList[i].user == this.props.user) bIsSelf=true;
+            this.state.list.push({name: messageList[i].user,
+                                 msg: messageList[i].message,
+                                 time: messageList[i].time,
+                                 self: bIsSelf});
+        }
+
+        //Need to save the state to cause the view to refresh
+        this.setState({
+            list: this.state.list
+        });
     }
 
     render () {

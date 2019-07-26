@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, KeyboardAvoidingView, Animated, Easing } from 'react-native';
+import { StyleSheet, View, Dimensions, KeyboardAvoidingView, Animated, Easing, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Input, Button, Icon, ThemeProvider, Text } from 'react-native-elements';
 import LottieView from 'lottie-react-native';
 
@@ -50,7 +50,6 @@ export class LoginPage extends React.Component {
     }
 
     async login() {
-        
         //Start animating the loading bubbles
         Animated.loop(
             Animated.sequence([
@@ -91,6 +90,18 @@ export class LoginPage extends React.Component {
         }*/
         if (JSON.parse(response).LoginSuccess) {
             console.log("Login Success");
+            this.setState({
+                loaderSource : require('../../assets/1802-single-wave-loader_green.json'),
+                //loadAnimProgress : 0,
+                loadAnimProgress: new Animated.Value(0),
+            });
+            Animated.loop(
+                Animated.timing(this.state.loadAnimProgress, {
+                    toValue: 1,
+                    duration: 1000,
+                    easing: Easing.linear,
+                }),
+            ).start();
             this.props.setNewUser(this.state.username); // This will set in motion getting the old messages in the message log
         } else {
                 console.log("Login Fail");
@@ -146,7 +157,8 @@ export class LoginPage extends React.Component {
                 ]).start(() => {
                     this.setState({
                         loaderSource : require('../../assets/1802-single-wave-loader.json'),
-                        loadAnimProgress : 0,
+                        //loadAnimProgress : 0,
+                        loadAnimProgress: new Animated.Value(0),
                     });
                 });
             }
@@ -172,64 +184,69 @@ export class LoginPage extends React.Component {
         if (this.state.hidden) return null;
 
         return (
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <Animated.View 
                 style={[styles.container, {opacity: this.state.fadeValue}]}
                 ref={ref => this.AnimView = ref}
                 >
                 <KeyboardAvoidingView
                     style={styles.userInfo}
-                    behavior="height"
-                    keyboardVerticalOffset='-20'
+                    behavior="padding"
+                    //keyboardVerticalOffset='-20'
                     enabled>
-                    <ThemeProvider theme={theme}>
-                        <Animated.View style={{
-                            transform: [{
-                                translateX: this.state.loaderTranslateX }]
-                        }}>
-                            <LottieView 
-                                style={styles.lottie} 
-                                source={this.state.loaderSource} 
-                                loop 
-                                progress={this.state.loadAnimProgress}/>
-                        </Animated.View>
-                        <FormInput 
-                            refInput={input => (this.usernameInput = input)}
-                            icon="user"
-                            placeholder="Username"
-                            value={username}
-                            onChangeText={username => this.setState({ username })}
-                            returnKeyType="next"
-                            onSubmitEditing={() => {
-                                //this.validateUsername();
-                                this.passwordInput.focus();
-                            }}
-                        />
-                        <FormInput 
-                            refInput={input => (this.passwordInput = input)}
-                            icon="lock"
-                            placeholder="Password"
-                            value={password}
-                            onChangeText={password => this.setState({ password })}
-                            secureTextEntry
-                            returnKeyType="go"
-                            onSubmitEditing={() => {
-                                //this.validateConfirmationPassword();
-                                this.login();
-                            }}
-                        />
-                        <Button
-                            //loading={isLoading}
-                            title="Log In"
-                            containerStyle={{ flex: -1 }}
-                            buttonStyle={styles.loginButton}
-                            
-                            //titleStyle={styles.signUpButtonText}
-                            onPress={this.login}
-                            //disabled={isLoading}
-                        />
-                    </ThemeProvider>
+                        <View style={{ flex : 1 }} />
+                        <ThemeProvider theme={theme}>
+                            <Animated.View 
+                                style={{
+                                transform: [{
+                                    translateX: this.state.loaderTranslateX }]
+                                }}>
+                                <LottieView 
+                                    style={styles.lottie} 
+                                    source={this.state.loaderSource} 
+                                    loop 
+                                    progress={this.state.loadAnimProgress}/>
+                            </Animated.View>
+                            <FormInput 
+                                refInput={input => (this.usernameInput = input)}
+                                icon="user"
+                                placeholder="Username"
+                                value={username}
+                                onChangeText={username => this.setState({ username })}
+                                returnKeyType="next"
+                                onSubmitEditing={() => {
+                                    //this.validateUsername();
+                                    this.passwordInput.focus();
+                                }}
+                            />
+                            <FormInput 
+                                refInput={input => (this.passwordInput = input)}
+                                icon="lock"
+                                placeholder="Password"
+                                value={password}
+                                onChangeText={password => this.setState({ password })}
+                                secureTextEntry
+                                returnKeyType="go"
+                                onSubmitEditing={() => {
+                                    //this.validateConfirmationPassword();
+                                    this.login();
+                                }}
+                            />
+                            <Button
+                                //loading={isLoading}
+                                title="Log In"
+                                containerStyle={{ flex: -1 }}
+                                buttonStyle={styles.loginButton}
+                                
+                                //titleStyle={styles.signUpButtonText}
+                                onPress={this.login}
+                                //disabled={isLoading}
+                            />
+                        </ThemeProvider>
+                        <View style={{ flex : 1 }} />
                 </KeyboardAvoidingView>
             </Animated.View>
+            </TouchableWithoutFeedback>
         );
     }
 }
@@ -261,17 +278,18 @@ const styles = StyleSheet.create({
         height: SCREEN_HEIGHT,
         width: SCREEN_WIDTH,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         zIndex: 1,
     },
     userInfo: {
         flex: 1,
         width: '80%',
+        //paddingTop: 100,
         //height: '100%',
         //backgroundColor: 'blue',
         alignItems: 'center',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
     },
     inputStyle: {
         flex: 1,
