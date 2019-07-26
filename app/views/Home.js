@@ -87,24 +87,23 @@ export class Home extends React.Component {
     render () {
         return (
             <View style={styles.container}>
+                <MyStatusBar backgroundColor="#000000" barStyle="light-content" />
 
-            <MyStatusBar backgroundColor="#000000" barStyle="light-content" />
-
-            <KeyboardAvoidingView
-                style = {styles.keyViewContainer}
-                behavior="height"
-                keyboardVerticalOffset='-20'
-                enabled>
-                
-                <MessagesLog 
-                    ref={this.msgLogRef}
-                    style={styles.msgLog}
-                    user={ this.props.user }
-                    ></MessagesLog>
-                <MessageInput
-                    addNewMessage={ this.addNewMessage }
-                />
-            </KeyboardAvoidingView>
+                <KeyboardAvoidingView
+                    style = {styles.keyViewContainer}
+                    behavior="height"
+                    keyboardVerticalOffset='-20'
+                    enabled>
+                    
+                    <MessagesLog 
+                        ref={this.msgLogRef}
+                        style={styles.msgLog}
+                        user={ this.props.user }
+                        ></MessagesLog>
+                    <MessageInput
+                        addNewMessage={ this.addNewMessage }
+                    />
+                </KeyboardAvoidingView>
             </View>
         );
     }
@@ -116,14 +115,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
-        //height: SCREEN_HEIGHT,
     },
     keyViewContainer: {
-        backgroundColor: 'black',
         flex: 1,
         justifyContent: 'flex-end',
         flexDirection: 'column',
-        paddingTop: STATUSBAR_HEIGHT+20,
     },
     msgLog: {
         flex: 1,

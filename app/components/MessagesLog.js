@@ -44,28 +44,28 @@ export class MessagesLog extends React.Component {
     render () {
         return (
             <View style={styles.container}>
-            <ScrollView 
-            contentContainerStyle={styles.scrollContainer}
-            // Next two lines make the scroll view always scroll to the end
-            ref={ref => this.ScrollView = ref}
-            onContentSizeChange={(contentWidth, contentHeight)=>{
-                this.ScrollView.scrollToEnd({animated:true});
-            }}>
-                {
-                    this.state.list.map((l,i) => (
-                        <ListItem
-                            key={i}
-                            title={l.name}
-                            titleStyle={styles.name}
-                            subtitle={l.msg}
-                            subtitleStyle={styles.messageText}
-                            style={styles.messageContainer}
-                            contentContainerStyle={styles.msgContentContainer}
-                            containerStyle={[styles.messageBubble, l.self == true ? styles.selfMsg : styles.regMsg]}
-                        />
-                    ))
-                }
-            </ScrollView>
+                    <ScrollView 
+                    contentContainerStyle={styles.scrollContainer}
+                    // Next two lines make the scroll view always scroll to the end
+                    ref={ref => this.ScrollView = ref}
+                    onContentSizeChange={(contentWidth, contentHeight)=>{
+                        this.ScrollView.scrollToEnd({animated:true});
+                    }}>
+                        {
+                            this.state.list.map((l,i) => (
+                                <ListItem
+                                    key={i}
+                                    title={l.name}
+                                    titleStyle={styles.name}
+                                    subtitle={l.msg}
+                                    subtitleStyle={styles.messageText}
+                                    style={styles.messageContainer}
+                                    contentContainerStyle={styles.msgContentContainer}
+                                    containerStyle={[styles.messageBubble, l.self == true ? styles.selfMsg : styles.regMsg]}
+                                />
+                            ))
+                        }
+                    </ScrollView>
             </View>
         );
     }
@@ -73,12 +73,13 @@ export class MessagesLog extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        maxHeight: SCREEN_HEIGHT-100,
-        //height: SCREEN_HEIGHT,
-        //width: SCREEN_WIDTH,
-        //backgroundColor: 'red',
+        flex: 1,
+        justifyContent: 'flex-end',
     },
     scrollContainer: {
+        flex: 1,
+        marginBottom: -1500, //The height of the messages beyond the screen
+        justifyContent: 'flex-end',
     },
     messageContainer: {
         //backgroundColor: 'green',
