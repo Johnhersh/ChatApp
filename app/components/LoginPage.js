@@ -42,7 +42,8 @@ export class LoginPage extends React.Component {
             fadeValue: new Animated.Value(1),
             hidden: false,
             loadAnimProgress: new Animated.Value(0),
-            //loaderSource: '../../assets/1802-single-wave-loader.json'
+            loaderSource: require('../../assets/1802-single-wave-loader.json'),
+            loaderTranslateX: new Animated.Value(0),
         }
 
         this.login = this.login.bind(this);
@@ -91,9 +92,64 @@ export class LoginPage extends React.Component {
         if (JSON.parse(response).LoginSuccess) {
             console.log("Login Success");
             this.props.setNewUser(this.state.username); // This will set in motion getting the old messages in the message log
-        } else
-            console.log("Login Fail");
-            this.state.loadAnimProgress.setValue(0);
+        } else {
+                console.log("Login Fail");
+                this.setState({
+                    loaderSource : require('../../assets/1802-single-wave-loader_red.json'),
+                    //loaderTranslateX: 1,
+                });
+                let bounceAmount = 15;
+                let bounceDuration = 80;
+                Animated.sequence([
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: bounceAmount,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: -bounceAmount,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: bounceAmount,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: -bounceAmount,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: bounceAmount,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: -bounceAmount,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                    Animated.timing(this.state.loaderTranslateX,{
+                        toValue: 0,
+                        duration: bounceDuration,
+                        easing: Easing.ease,
+                        useNativeDriver: true
+                    }),
+                ]).start(() => {
+                    this.setState({
+                        loaderSource : require('../../assets/1802-single-wave-loader.json'),
+                        loadAnimProgress : 0,
+                    });
+                });
+            }
     }
 
     // This gets called from the component in App.js after we're done loading all messages and are ready to hide the login screen
@@ -126,7 +182,16 @@ export class LoginPage extends React.Component {
                     keyboardVerticalOffset='-20'
                     enabled>
                     <ThemeProvider theme={theme}>
-                        <LottieView style={styles.lottie} source={require('../../assets/1802-single-wave-loader.json')} loop progress={this.state.loadAnimProgress}/>
+                        <Animated.View style={{
+                            transform: [{
+                                translateX: this.state.loaderTranslateX }]
+                        }}>
+                            <LottieView 
+                                style={styles.lottie} 
+                                source={this.state.loaderSource} 
+                                loop 
+                                progress={this.state.loadAnimProgress}/>
+                        </Animated.View>
                         <FormInput 
                             refInput={input => (this.usernameInput = input)}
                             icon="user"
