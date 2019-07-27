@@ -81,6 +81,9 @@ export class Home extends React.Component {
             this.state.connection.on('ReceiveMessage', (user, receivedMessage, time, bIsSelf) => {
               this.messageReceived(user, receivedMessage, time, bIsSelf);
             });
+            this.state.connection.onclose(async () => {
+                console.log('Connection closed');
+            });
         });
     }
 
