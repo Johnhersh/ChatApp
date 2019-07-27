@@ -49,7 +49,7 @@ export class LoginPage extends React.Component {
         this.login = this.login.bind(this);
     }
 
-    async login() {
+    login() {
         //Start animating the loading bubbles
         Animated.loop(
             Animated.sequence([
@@ -62,8 +62,9 @@ export class LoginPage extends React.Component {
             ])
         ).start();
         
+        let _this = this;
         try {
-            let response = await fetch(
+            fetch(
             'http://192.168.1.155:5000/api/MobileLogin', {
                 method: 'POST',
                 headers: {
@@ -74,11 +75,16 @@ export class LoginPage extends React.Component {
                     'username': this.state.username,
                     'password': this.state.password,
                 })
+            })
+            .then(response => {return response.json();})
+            .then(responseJson => {_this.finishLogin(responseJson);})
+            .catch(function () {
+                //This is in case we're trying to log in but the server is offline.
+                console.log('Unable to reach server!');
+                let responseJson = JSON.stringify({'LoginSuccess': false,});
+                _this.finishLogin(responseJson);
+                alert("Server Offline");
             });
-            let responseJson = await response.json();
-            //let responseHTML = await response.text();
-            //let responseHeaders = await response.headers;
-            this.finishLogin(responseJson);
         } catch (error) {
             console.error(error);
         }
